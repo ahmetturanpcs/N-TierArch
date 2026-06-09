@@ -1,0 +1,17 @@
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\bin\Debug\net8.0\exampleProject.Data.deps.json
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\bin\Debug\net8.0\exampleProject.Data.runtimeconfig.json
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\bin\Debug\net8.0\exampleProject.Data.dll
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\bin\Debug\net8.0\exampleProject.Data.pdb
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\bin\Debug\net8.0\exampleProject.Core.dll
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\bin\Debug\net8.0\exampleProject.Core.pdb
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleProject.Data.csproj.AssemblyReference.cache
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleProject.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleProject.Data.AssemblyInfoInputs.cache
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleProject.Data.AssemblyInfo.cs
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleProject.Data.csproj.CoreCompileInputs.cache
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleP.E07544EB.Up2Date
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleProject.Data.dll
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\refint\exampleProject.Data.dll
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleProject.Data.pdb
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\exampleProject.Data.genruntimeconfig.cache
+C:\Users\ahmetturan.karakus\source\repos\exampleProject\exampleProject.Data\obj\Debug\net8.0\ref\exampleProject.Data.dll

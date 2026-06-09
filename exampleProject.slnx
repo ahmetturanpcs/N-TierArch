@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="exampleProject.Core/exampleProject.Core.csproj" Id="c7469b85-d90c-4b78-a966-795e6fc8f731" />
+  <Project Path="exampleProject.Data/exampleProject.Data.csproj" Id="8876ec92-aaf6-4456-8e6f-45d1dd6b1696" />
+  <Project Path="exampleProject.Web/exampleProject.Web.csproj" Id="156f2d27-0193-4336-b5c8-6835a62cfaf0" />
+</Solution>
