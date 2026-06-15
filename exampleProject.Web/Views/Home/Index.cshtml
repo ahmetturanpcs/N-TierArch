@@ -5,54 +5,201 @@
     ViewData["Title"] = "Kategori Listesi";
 }
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Yönetim Paneli - Kategoriler</h3>
-                <div class="card-tools">
-                    <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Yeni Kategori</button>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <!--begin::Fonts-->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@@fontsource/source-sans-3@5.0.12/index.css"
+          integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q="
+          crossorigin="anonymous"
+          media="print"
+          onload="this.media = 'all'" />
+    <!--end::Fonts-->
+    <!--begin::Third Party Plugin(OverlayScrollbars)-->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
+          crossorigin="anonymous" />
+    <!--end::Third Party Plugin(OverlayScrollbars)-->
+    <!--begin::Third Party Plugin(Bootstrap Icons)-->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+          crossorigin="anonymous" />
+    <!--end::Third Party Plugin(Bootstrap Icons)-->
+    <!--begin::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet" href="../css/adminlte.css" />
+    <!--end::Required Plugin(AdminLTE)-->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.4.0/dist/css/tabulator_bootstrap5.min.css"
+          crossorigin="anonymous" />
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="app-wrapper">
+        <!--end::Sidebar-->
+        <main class="app-main">
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="mb-0">Kategori Yönetimi</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-end">
+                                <li class="breadcrumb-item"><a href="#">Yönetim Paneli</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Kategoriler</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Kategori Adı</th>
-                            <th>Açıklama</th>
-                            <th>Durum</th>
-                            <th>Kayıt Tarihi</th>
-                            <th>İşlemler</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Id</td>
-                                <td><strong>@item.Name</strong></td>
-                                <td>@item.Description</td>
-                                <td>
-                                    @if (item.IsActive)
-                                    {
-                                        <span class="badge badge-success">Aktif</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge badge-danger">Pasif</span>
-                                    }
-                                </td>
-                                <td>@item.CreatedDate.ToShortDateString()</td>
-                                <td>
-                                    <button class="btn btn-info btn-sm"><i class="fas fa-pencil-alt"></i> Düzenle</button>
-                                    <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i> Sil</button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+            <div class="app-content">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Kategori Listesi</h3>
+                            <div class="card-tools d-flex gap-2 align-items-center">
+                                <button class="btn btn-primary btn-sm me-2">
+                                    <i class="bi bi-plus-lg"></i> Yeni Kategori
+                                </button>
+                                <div class="input-group input-group-sm" style="width: 16rem">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-search" aria-hidden="true"></i>
+                                    </span>
+                                    <input id="table-filter"
+                                           type="search"
+                                           class="form-control"
+                                           placeholder="Kategorilerde ara..."
+                                           aria-label="Filter rows" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex gap-2 mb-3">
+                                <button id="export-csv" type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-filetype-csv me-1" aria-hidden="true"></i>
+                                    CSV Dışa Aktar
+                                </button>
+                                <button id="export-json" type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-filetype-json me-1" aria-hidden="true"></i>
+                                    JSON Dışa Aktar
+                                </button>
+                                <button id="print-table" type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-printer me-1" aria-hidden="true"></i>
+                                    Yazdır
+                                </button>
+                            </div>
+                            <div id="categories-table"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </main>
     </div>
-</div>
+
+    <!-- Scriptler -->
+    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="../js/adminlte.js"></script>
+
+    <!-- OverlayScrollbars & Theme Config Kısmı (Aynen Korundu) -->
+    <script>
+        const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
+        const Default = { scrollbarTheme: 'os-theme-light', scrollbarAutoHide: 'leave', scrollbarClickScroll: true };
+        document.addEventListener('DOMContentLoaded', function () {
+        const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
+        const isMobile = window.innerWidth <= 992;
+        if (sidebarWrapper && OverlayScrollbarsGlobal?.OverlayScrollbars !== undefined && !isMobile) {
+        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
+        scrollbars: { theme: Default.scrollbarTheme, autoHide: Default.scrollbarAutoHide, clickScroll: Default.scrollbarClickScroll },
+        });
+        }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.4.0/dist/js/tabulator.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // 1. Razor Model verisini JavaScript dizisine dönüştürüyoruz
+        const tableData = [
+        @foreach (var item in Model)
+        {
+            <text>
+                {
+                id: @item.Id,
+                name: "@Html.Raw(item.Name)",
+                description: "@Html.Raw(item.Description)",
+                isActive: @(item.IsActive ? "true" : "false"),
+                createdDate: "@item.CreatedDate.ToShortDateString()"
+                },
+            </text>
+        }
+        ];
+
+        // 2. Durum Sütunu için Badge Oluşturucu (Bootstrap 5 text-bg-* yapısı)
+        const statusFormatter = (cell) => {
+        const isActive = cell.getValue();
+        const badgeClass = isActive ? 'success' : 'danger';
+        const badgeText = isActive ? 'Aktif' : 'Pasif';
+        return `<span class="badge text-bg-${badgeClass}">${badgeText}</span>`;
+        };
+
+        // 3. İşlemler Sütunu için Buton Oluşturucu
+        const actionsFormatter = (cell) => {
+        const id = cell.getData().id;
+        return `
+        <button class="btn btn-info btn-sm me-1" onclick="editCategory(${id})"><i class="bi bi-pencil-square"></i> Düzenle</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCategory(${id})"><i class="bi bi-trash"></i> Sil</button>
+        `;
+        };
+
+        // 4. Tabulator Tanımlaması
+        const table = new Tabulator("#categories-table", {
+        data: tableData,
+        layout: "fitColumns",
+        responsiveLayout: "hide",
+        pagination: "local",
+        paginationSize: 10,
+        columns: [
+        { title: "ID", field: "id", width: 70, sorter: "number" },
+        { title: "Kategori Adı", field: "name", sorter: "string", formatter: (cell) => `<strong>${cell.getValue()}</strong>` },
+        { title: "Açıklama", field: "description", sorter: "string" },
+        { title: "Durum", field: "isActive", halign: "center", align: "center", formatter: statusFormatter },
+        { title: "Kayıt Tarihi", field: "createdDate", sorter: "date" },
+        { title: "İşlemler", field: "actions", download: false, headerSort: false, formatter: actionsFormatter, width: 180 }
+        ]
+        });
+
+        // 5. Arama Filtresi Fonksiyonu
+        document.getElementById('table-filter').addEventListener('input', (e) => {
+        const value = e.target.value;
+        table.setFilter([
+        [
+        { field: "name", type: "like", value: value },
+        { field: "description", type: "like", value: value }
+        ]
+        ]);
+        });
+
+        // 6. Dışa Aktarma ve Yazdırma Butonları
+        document.getElementById('export-csv').addEventListener('click', () => table.download('csv', 'kategoriler.csv'));
+        document.getElementById('export-json').addEventListener('click', () => table.download('json', 'kategoriler.json'));
+        document.getElementById('print-table').addEventListener('click', () => table.print(false, true));
+        });
+
+        // Buton tıklama fonksiyonları (İhtiyacınıza göre içlerini doldurabilirsiniz)
+        function editCategory(id) {
+        console.log("Düzenlenecek Kategori ID:", id);
+        // window.location.href = "/Category/Edit/" + id;
+        }
+
+        function deleteCategory(id) {
+        if(confirm("Bu kategoriyi silmek istediğinize emin misiniz?")) {
+        console.log("Silinecek Kategori ID:", id);
+        // Ajax veya yönlendirme kodunuz
+        }
+        }
+    </script>
+</body>
+</html>
