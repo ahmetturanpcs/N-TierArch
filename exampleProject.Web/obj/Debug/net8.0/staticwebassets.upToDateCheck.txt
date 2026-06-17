@@ -119,6 +119,7 @@ wwwroot\dist\tables\simple.html
 wwwroot\dist\widgets\cards.html
 wwwroot\dist\widgets\info-box.html
 wwwroot\dist\widgets\small-box.html
+wwwroot\favicon-default.ico
 wwwroot\favicon.ico
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\LICENSE

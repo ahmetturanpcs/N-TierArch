@@ -1,6 +1,6 @@
 ﻿@using exampleProject.Core.Entities
-@model List<Category>
-
+@using exampleProject.Web.ViewModels
+@model DashboardViewModel
 @{
     ViewData["Title"] = "Kategori Listesi";
 }
@@ -277,6 +277,63 @@
                     </div>
                 </div>
             </div>
+
+            <div class="app-content-header">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h3 class="mb-0">Mağaza Yönetimi</h3>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-end">
+                                <li class="breadcrumb-item"><a asp-area="Index">Yönetim Paneli</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Mağazalar</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-content">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Mağaza Listesi</h3>
+                            <div class="card-tools d-flex gap-2 align-items-center">
+                                <button class="btn btn-primary btn-sm me-2">
+                                    <i class="bi bi-plus-lg"></i> Yeni Mağaza
+                                </button>
+                                <div class="input-group input-group-sm" style="width: 16rem">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-search" aria-hidden="true"></i>
+                                    </span>
+                                    <input id="table-filter"
+                                           type="search"
+                                           class="form-control"
+                                           placeholder="Mağazalarda ara..."
+                                           aria-label="Filter rows" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex gap-2 mb-3">
+                                <button id="export-csv" type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-filetype-csv me-1" aria-hidden="true"></i>
+                                    CSV Dışa Aktar
+                                </button>
+                                <button id="export-json" type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-filetype-json me-1" aria-hidden="true"></i>
+                                    JSON Dışa Aktar
+                                </button>
+                                <button id="print-table" type="button" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-printer me-1" aria-hidden="true"></i>
+                                    Yazdır
+                                </button>
+                            </div>
+                            <div id="stores-table"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -306,8 +363,91 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
         // 1. Razor Model verisini JavaScript dizisine dönüştürüyoruz
+        const tableData2 = [
+        @foreach (var item in Model.Stores)
+        {
+            <text>
+                {
+                id: @item.Id,
+                name: "@Html.Raw(item.Name)",
+                description: "@Html.Raw(item.Description)",
+                isActive: @(item.IsActive ? "true" : "false"),
+                createdDate: "@item.CreatedDate.ToShortDateString()"
+                },
+            </text>
+        }
+        ];
+
+        // 2. Durum Sütunu için Badge Oluşturucu (Bootstrap 5 text-bg-* yapısı)
+        const statusFormatter = (cell) => {
+        const isActive = cell.getValue();
+        const badgeClass = isActive ? 'success' : 'danger';
+        const badgeText = isActive ? 'Aktif' : 'Pasif';
+        return `<span class="badge text-bg-${badgeClass}">${badgeText}</span>`;
+        };
+
+        // 3. İşlemler Sütunu için Buton Oluşturucu
+        const actionsFormatter = (cell) => {
+        const id = cell.getData().id;
+        return `
+        <button class="btn btn-info btn-sm me-1" onclick="editCategory(${id})"><i class="bi bi-pencil-square"></i> Düzenle</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCategory(${id})"><i class="bi bi-trash"></i> Sil</button>
+        `;
+        };
+
+        // 4. Tabulator Tanımlaması
+        const table2 = new Tabulator("#stores-table", {
+        data: tableData2,
+        layout: "fitColumns",
+        responsiveLayout: "hide",
+        pagination: "local",
+        paginationSize: 10,
+        columns: [
+        { title: "ID", field: "id", width: 70, sorter: "number" },
+        { title: "Kategori Adı", field: "name", sorter: "string", formatter: (cell) => `<strong>${cell.getValue()}</strong>` },
+        { title: "Açıklama", field: "description", sorter: "string" },
+        { title: "Durum", field: "isActive", halign: "center", align: "center", formatter: statusFormatter },
+        { title: "Kayıt Tarihi", field: "createdDate", sorter: "date" },
+        { title: "İşlemler", field: "actions", download: false, headerSort: false, formatter: actionsFormatter, width: 180 }
+        ]
+        });
+
+        // 5. Arama Filtresi Fonksiyonu
+        document.getElementById('table-filter').addEventListener('input', (e) => {
+        const value = e.target.value;
+        table.setFilter([
+        [
+        { field: "name", type: "like", value: value },
+        { field: "description", type: "like", value: value }
+        ]
+        ]);
+        });
+
+        // 6. Dışa Aktarma ve Yazdırma Butonları
+        document.getElementById('export-csv').addEventListener('click', () => table.download('csv', 'kategoriler.csv'));
+        document.getElementById('export-json').addEventListener('click', () => table.download('json', 'kategoriler.json'));
+        document.getElementById('print-table').addEventListener('click', () => table.print(false, true));
+        });
+
+        // Buton tıklama fonksiyonları (İhtiyacınıza göre içlerini doldurabilirsiniz)
+        function editCategory(id) {
+        console.log("Düzenlenecek Kategori ID:", id);
+        // window.location.href = "/Category/Edit/" + id;
+        }
+
+        function deleteCategory(id) {
+        if(confirm("Bu kategoriyi silmek istediğinize emin misiniz?")) {
+        console.log("Silinecek Kategori ID:", id);
+        // Ajax veya yönlendirme kodunuz
+        }
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        // 1. Razor Model verisini JavaScript dizisine dönüştürüyoruz
         const tableData = [
-        @foreach (var item in Model)
+        @foreach (var item in Model.Categories)
         {
             <text>
                 {

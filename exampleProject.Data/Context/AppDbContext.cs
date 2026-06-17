@@ -18,12 +18,16 @@ namespace exampleProject.Data.Context
 
         //veritabanında yer almasını isteediğimiz tabloları DbSet olarak tanımlıyoruz.
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Store> Stores { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); // Bu satır Identity tablolarının haritalanması için şarttır!
 
             modelBuilder.Entity<Category>()
                 .Property(c => c.CreatedDate)
+                .HasDefaultValueSql("GETDATE()");
+            modelBuilder.Entity<Store>()
+                .Property(s => s.CreatedDate)
                 .HasDefaultValueSql("GETDATE()");
         }
     }
