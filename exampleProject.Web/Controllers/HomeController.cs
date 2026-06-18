@@ -1,5 +1,6 @@
 using exampleProject.Core.Entities;
 using exampleProject.Core.Interfaces;
+using exampleProject.Core.Repositories;
 using exampleProject.Web.Models;
 using exampleProject.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ namespace exampleProject.Web.Controllers
         // Sadece arayüze (sözleşmeye) bağımlıyız, Data katmanını doğrudan çağırmıyoruz!
         private readonly IGenericRepository<Category> _categoryRepository;
         private readonly IGenericRepository<Store> _storeRepository;
-        public HomeController(ILogger<HomeController> logger, IGenericRepository<Category> categoryRepository, IGenericRepository<Store> storeRepository)
+        private readonly IUnitOfWork _unitOfWork; 
+        public HomeController(ILogger<HomeController> logger, IGenericRepository<Category> categoryRepository, IGenericRepository<Store> storeRepository, IUnitOfWork unitOfWork)
         {
             _logger = logger;
             _categoryRepository = categoryRepository;
             _storeRepository = storeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> Index()
@@ -38,6 +41,18 @@ namespace exampleProject.Web.Controllers
             };
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateCategory(Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                await _categoryRepository.AddAsync(category);
+                await _unitOfWork.CommitAsync(); // Değişiklikleri kaydet
+                return RedirectToAction(nameof(Index));
+            }
+            return View(category);
         }
 
         public IActionResult Privacy()

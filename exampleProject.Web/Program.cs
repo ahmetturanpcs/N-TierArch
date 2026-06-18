@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using exampleProject.Data.Context;
 using exampleProject.Web.Authorization;
+using exampleProject.Core.Repositories;
+using exampleProject.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +35,7 @@ builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProv
 builder.Services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(exampleProject.Data.Repositories.GenericRepository<>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
